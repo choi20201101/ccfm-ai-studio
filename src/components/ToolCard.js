@@ -42,19 +42,6 @@ const ToolCard = ({ tool, isLoggedIn }) => {
       }}>
         {tool.name || '도구 이름'}
       </h3>
-      
-      {/* 링크 */}
-      {tool.link && (
-        <div style={{
-          fontSize: '12px',
-          color: '#6b7280',
-          marginBottom: '15px',
-          textAlign: 'center',
-          wordBreak: 'break-all'
-        }}>
-          🔗 {tool.link}
-        </div>
-      )}
 
       {/* 설명 */}
       {tool.description && (
