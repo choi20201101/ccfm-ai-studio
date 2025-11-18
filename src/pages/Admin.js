@@ -25,7 +25,10 @@ const Admin = () => {
     name: '',
     description: '',
     link: '',
-    imageFile: null
+    imageFile: null,
+    username: '',
+    password: '',
+    twoFactorInfo: ''
   });
 
   useEffect(() => {
@@ -108,14 +111,27 @@ const Admin = () => {
         name: toolForm.name,
         description: toolForm.description,
         link: toolForm.link,
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        credentials: {
+          username: toolForm.username,
+          password: toolForm.password,
+          twoFactorInfo: toolForm.twoFactorInfo
+        }
       };
 
       await updateDoc(doc(db, 'categories', selectedCategory), {
         tools: [...(category.tools || []), newTool]
       });
 
-      setToolForm({ name: '', description: '', link: '', imageFile: null });
+      setToolForm({ 
+        name: '', 
+        description: '', 
+        link: '', 
+        imageFile: null,
+        username: '',
+        password: '',
+        twoFactorInfo: ''
+      });
       setShowToolForm(false);
       alert('도구 추가 완료!');
     } catch (error) {
@@ -366,10 +382,33 @@ const Admin = () => {
                 <p style={{ 
                   fontSize: '14px', 
                   color: '#6b7280',
-                  marginBottom: '10px'
+                  marginBottom: '5px'
                 }}>
                   {tool.description || '설명 없음'}
                 </p>
+                {tool.credentials?.username && (
+                  <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '3px' }}>
+                    ID: {tool.credentials.username}
+                  </p>
+                )}
+                {tool.credentials?.password && (
+                  <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '3px' }}>
+                    PW: {tool.credentials.password}
+                  </p>
+                )}
+                {tool.credentials?.twoFactorInfo && (
+                  <p style={{ 
+                    fontSize: '11px', 
+                    color: '#92400e',
+                    background: '#fef3c7',
+                    padding: '5px',
+                    borderRadius: '4px',
+                    marginTop: '5px',
+                    marginBottom: '10px'
+                  }}>
+                    📱 {tool.credentials.twoFactorInfo}
+                  </p>
+                )}
                 <button
                   onClick={() => handleDeleteTool(category.id, tool.id)}
                   style={{
@@ -379,7 +418,8 @@ const Admin = () => {
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '12px'
+                    fontSize: '12px',
+                    marginTop: '10px'
                   }}
                 >
                   삭제
@@ -440,6 +480,48 @@ const Admin = () => {
               />
 
               <input
+                type="text"
+                value={toolForm.username}
+                onChange={(e) => setToolForm({...toolForm, username: e.target.value})}
+                placeholder="로그인 아이디 (선택)"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  marginBottom: '10px'
+                }}
+              />
+
+              <input
+                type="text"
+                value={toolForm.password}
+                onChange={(e) => setToolForm({...toolForm, password: e.target.value})}
+                placeholder="로그인 비밀번호 (선택)"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  marginBottom: '10px'
+                }}
+              />
+
+              <textarea
+                value={toolForm.twoFactorInfo}
+                onChange={(e) => setToolForm({...toolForm, twoFactorInfo: e.target.value})}
+                placeholder={'2차 인증 안내 (선택)\n예: Google Authenticator 사용\n인증 코드는 경영관리실(1234)에 문의'}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  marginBottom: '10px',
+                  minHeight: '80px'
+                }}
+              />
+
+              <input
                 type="file"
                 accept="image/*"
                 onChange={(e) => setToolForm({...toolForm, imageFile: e.target.files[0]})}
@@ -466,7 +548,15 @@ const Admin = () => {
                 <button
                   onClick={() => {
                     setShowToolForm(false);
-                    setToolForm({ name: '', description: '', link: '', imageFile: null });
+                    setToolForm({ 
+                      name: '', 
+                      description: '', 
+                      link: '', 
+                      imageFile: null,
+                      username: '',
+                      password: '',
+                      twoFactorInfo: ''
+                    });
                   }}
                   style={{
                     padding: '8px 16px',

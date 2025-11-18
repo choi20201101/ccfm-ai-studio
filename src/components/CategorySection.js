@@ -1,7 +1,7 @@
 import React from 'react';
 import ToolCard from './ToolCard';
 
-const CategorySection = ({ category }) => {
+const CategorySection = ({ category, isLoggedIn }) => {
   return (
     <div style={{ marginBottom: '60px' }}>
       <div style={{ 
@@ -31,7 +31,11 @@ const CategorySection = ({ category }) => {
         maxWidth: '100%'
       }}>
         {category.tools?.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
+          <ToolCard 
+            key={tool.id} 
+            tool={tool}
+            isLoggedIn={isLoggedIn}
+          />
         ))}
       </div>
     </div>
